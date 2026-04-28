@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Edit' if row else 'Add' }} Debit{% endblock %}
+{% block content %}
+<section class="bg-white rounded shadow-sm p-4">
+  <h1 class="h3 mb-4">{{ 'Edit' if row else 'Add' }} Debit</h1>
+  <form method="post" action="{{ url_for('update', record_id=row.id) if row else url_for('submit') }}">
+    <div class="row g-3">
+      <div class="col-md-4">
+        <label class="form-label">Parcel Number</label>
+        <input class="form-control" name="parcel_number" value="{{ row.parcel_number if row else '' }}" required maxlength="20">
+      </div>
+      <div class="col-md-8">
+        <label class="form-label">Reserve</label>
+        <select class="form-select" id="reserve" name="reserve" required>
+          <option value="">Select a reserve...</option>
+          {% for reserve in reserve_rules.keys() %}
+            <option value="{{ reserve }}" {% if row and row.reserve == reserve %}selected{% endif %}>{{ reserve }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">Reserve Debit Rule</label>
+        <select class="form-select" id="rule" name="rule"></select>
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">Quantity GPD</label>
+        <input class="form-control" id="quantity" name="quantity" value="{{ row.quantity if row else '' }}" readonly>
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Basin</label>
+        <input class="form-control" id="basin" name="basin" value="{{ row.basin if row else '' }}" readonly>
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Debit Type</label>
+        <input class="form-control" name="debit_type" value="{{ row.debit_type if row else 'Exempt' }}" readonly>
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Water Source</label>
+        <input class="form-control" name="water_source" value="{{ row.water_source if row else '' }}">
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Irrigation Water</label>
+        <select class="form-select" name="irrigation">
+          {% for value in ['No', 'Yes'] %}<option value="{{ value }}" {% if row and row.irrigation == value %}selected{% endif %}>{{ value }}</option>{% endfor %}
+        </select>
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Number of Connections</label>
+        <input type="number" class="form-control" name="connection_number" value="{{ row.connection_number if row else 1 }}">
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Building Type</label>
+        <input class="form-control" name="building_type" value="{{ row.building_type if row else '' }}">
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Permit Number</label>
+        <input class="form-control" name="permit_number" value="{{ row.permit_number if row else '' }}">
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Permit Date</label>
+        <input type="date" class="form-control" name="permit_date" value="{{ row.permit_date if row else '' }}">
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Permit Type</label>
+        <select class="form-select" name="permit_type">
+          {% for value in ['SFR - Single Family Residential', 'ADU - Accessory Dwelling Unit', 'MH/PM - Manufactured Home or Park Model Home', 'BPR - Accessory Structure', 'Other'] %}
+            <option value="{{ value }}" {% if row and row.permit_type == value %}selected{% endif %}>{{ value }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Septic</label>
+        <select class="form-select" name="septic">
+          {% for value in ['Yes', 'No'] %}<option value="{{ value }}" {% if row and row.septic == value %}selected{% endif %}>{{ value }}</option>{% endfor %}
+        </select>
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Number of Wells</label>
+        <input type="number" class="form-control" name="number_of_wells" value="{{ row.number_of_wells if row else 1 }}">
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Well ID</label>
+        <input class="form-control" name="well_id" value="{{ row.well_id if row else '' }}">
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Well Type</label>
+        <input class="form-control" name="well_type" value="{{ row.well_type if row else '' }}">
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Irrigation District</label>
+        <input class="form-control" name="irrigation_district" value="{{ row.irrigation_district if row else '' }}">
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Occupancy Date</label>
+        <input type="date" class="form-control" name="cofo_date" value="{{ row.cofo_date if row else '' }}">
+      </div>
+      <div class="col-12">
+        <label class="form-label">Notes</label>
+        <textarea class="form-control" name="notes" rows="3">{{ row.notes if row else '' }}</textarea>
+      </div>
+    </div>
+    <div class="d-flex justify-content-end gap-2 mt-4">
+      <a class="btn btn-outline-secondary" href="{{ url_for('index') }}">Cancel</a>
+      <button class="btn btn-primary">{{ 'Update' if row else 'Save' }}</button>
+    </div>
+  </form>
+</section>
+
+<script>
+const reserveRules = {{ reserve_rules|tojson }};
+const basinMap = {{ basins|tojson }};
+const selectedRule = {{ (row.rule if row else '')|tojson }};
+const reserveSelect = document.getElementById('reserve');
+const ruleSelect = document.getElementById('rule');
+const quantityInput = document.getElementById('quantity');
+const basinInput = document.getElementById('basin');
+
+function populateRules() {
+  const reserve = reserveSelect.value;
+  const rules = reserveRules[reserve] || [];
+  ruleSelect.innerHTML = '';
+  rules.forEach(item => {
+    const option = document.createElement('option');
+    option.value = item.rule;
+    option.textContent = item.rule;
+    option.dataset.quantity = item.quantity;
+    if (item.rule === selectedRule) option.selected = true;
+    ruleSelect.appendChild(option);
+  });
+  basinInput.value = basinMap[reserve] || '';
+  updateQuantity();
+}
+
+function updateQuantity() {
+  const option = ruleSelect.options[ruleSelect.selectedIndex];
+  quantityInput.value = option ? option.dataset.quantity : '0';
+}
+
+reserveSelect.addEventListener('change', populateRules);
+ruleSelect.addEventListener('change', updateQuantity);
+populateRules();
+</script>
+{% endblock %}
