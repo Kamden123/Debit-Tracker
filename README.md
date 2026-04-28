@@ -89,16 +89,16 @@ The generated report is based on grouped debit totals by reserve. The portfolio 
 
 ## Project Structure
 
-├── app.py                  # Flask routes, database setup, CRUD logic
-├── report.py               # PDF report generation logic
-├── requirements.txt        # Python dependencies
+├── app.py
+├── report.py
+├── requirements.txt
 ├── templates/
-│   ├── base.html           # Shared layout
-│   ├── index.html          # Records list/search page
-│   └── form.html           # Add/edit form workflow
+│   ├── base.html
+│   ├── index.html
+│   └── form.html
 ├── static/
 │   └── favicon.ico
-├── reports/                # Generated reports are written here
+├── reports/
 └── README.md
 
 ## Notes on the Original Version
