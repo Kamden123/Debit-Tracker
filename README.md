@@ -6,7 +6,7 @@ This portfolio version uses SQLite sample data so it can be reviewed and run loc
 
 ## Why I Built It
 
-The original workflow involved sending county data off to an exterior vendor. I built this application to reduce manual tracking, improve consistency, make reporting easier for staff, and cut out the exterior vendor which reduced update time and planning operation cost.
+The original workflow involved sending county data off to an external vendor. I built this application to reduce manual tracking, improve consistency, make reporting easier for staff, and cut out the external vendor which reduced update time and planning operation cost.
 
 ## Features
 
