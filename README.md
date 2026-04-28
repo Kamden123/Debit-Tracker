@@ -49,6 +49,7 @@ To adapt this back to PostgreSQL, the database connection layer can be easily mo
 
 
 git clone https://github.com/Kamden123/Debit-Tracker.git
+
 cd Debit-Tracker
 
 
