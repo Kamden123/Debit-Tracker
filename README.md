@@ -48,8 +48,8 @@ To adapt this back to PostgreSQL, the database connection layer can be easily mo
 ### 1. Clone the repository
 
 
-git clone <your-repo-url>
-cd debit-tracker
+git clone https://github.com/Kamden123/Debit-Tracker.git
+cd Debit-Tracker
 
 
 ### 2. Create and activate a virtual environment
